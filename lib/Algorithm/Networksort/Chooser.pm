@@ -1,3 +1,15 @@
+package Algorithm::Networksort::Chooser;
+
+our $VERSION = '0.100';
+
+use common::sense;
+
+
+1;
+
+
+
+
 =encoding utf-8
 
 =head1 NAME
@@ -28,3 +40,19 @@ The C<algorithm-networksort-chooser> script helps you find the best sorting netw
 Optimise by average-swaps using combinatoric analysis
 
 Algorithm::Networksort::Validate::XS
+
+
+
+=head1 SEE ALSO
+
+L<Algorithm-Networksort-Chooser github repo|https://github.com/hoytech/Algorithm-Networksort-Chooser>
+
+=head1 AUTHOR
+
+Doug Hoyte, C<< <doug@hcsw.org> >>
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2013 Doug Hoyte.
+
+This module is licensed under the same terms as perl itself.

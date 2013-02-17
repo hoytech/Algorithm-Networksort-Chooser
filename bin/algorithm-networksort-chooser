@@ -1,0 +1,131 @@
+#!/usr/bin/env perl
+
+use common::sense;
+
+use Algorithm::Networksort;
+use Getopt::Long;
+use Data::Dumper;
+
+
+my @opt_spec = (
+  'opt=s',
+  'median',
+  'selection=s',
+  'validate',
+  'show',
+);
+
+my $opt = {
+  'opt' => 'comparators',
+};
+
+GetOptions($opt, @opt_spec) || die "GetOptions failed";
+
+
+my $network_size = shift || die "need network size";
+
+
+my @candidates;
+
+foreach my $algo (Algorithm::Networksort::nw_algorithms()) {
+  my @network = silence_carps(sub { Algorithm::Networksort::nw_comparators($network_size, algorithm => $algo) });
+
+  push @candidates, {
+    algo => $algo,
+    network => \@network,
+  };
+}
+
+
+
+
+
+if ($opt->{median}) {
+  die "--selection and --median are incompatible" if defined $opt->{selection};
+
+  $opt->{selection} = int($network_size / 2);
+}
+
+
+if (defined $opt->{selection}) {
+  my $selection = [ split(',', $opt->{selection}) ];
+
+  foreach my $ind (@$selection) {
+    die "badly formed selection index: $ind" unless $ind =~ /^\d+$/;
+    die "selection index $ind is too large for the network size" if $ind >= $network_size;
+  }
+
+  foreach my $candidate (@candidates) {
+    $candidate->{network} = build_selection_network($candidate->{network}, $selection);
+  }
+}
+
+
+
+foreach my $candidate (@candidates) {
+  my @network = @{ $candidate->{network} };
+  my @grouped_network = Algorithm::Networksort::nw_group(\@network, $network_size, grouping=>'parallel');
+
+  $candidate->{comparators} = (0+@network);
+  $candidate->{stages} = (0+@grouped_network);
+}
+
+
+
+
+
+
+my @sorted_candidates;
+
+if ($opt->{opt} eq 'comparators') {
+  @sorted_candidates = sort {
+     $a->{comparators} <=> $b->{comparators}
+  } @candidates;
+} elsif ($opt->{opt} eq 'stages') {
+  @sorted_candidates = sort {
+     $a->{stages} <=> $b->{stages}
+  } @candidates;
+} else {
+  die "Unknown optimisation criteria: $opt->{opt}";
+}
+
+
+
+
+foreach my $result (@sorted_candidates) {
+  print "$result->{algo}: $result->{comparators} $result->{stages}\n";
+}
+
+
+
+
+sub silence_carps {
+  local *Algorithm::Networksort::carp = sub {};
+
+  shift->();
+}
+
+
+sub build_selection_network {
+  my ($network, $selection) = @_;
+
+  my $pinned = {};
+  $pinned->{$_} = 1 foreach (@$selection);
+
+  my @reversed_network = reverse @$network;
+  my @reversed_output;
+
+  foreach my $comparator (@reversed_network) {
+    if ($pinned->{$comparator->[0]} || $pinned->{$comparator->[1]}) {
+      $pinned->{$comparator->[0]} = $pinned->{$comparator->[1]} = 1;
+
+      push @reversed_output, $comparator;
+    }
+  }
+
+  return [ reverse @reversed_output ];
+}
+
+
+
+1;
