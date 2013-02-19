@@ -5,6 +5,37 @@ our $VERSION = '0.100';
 use common::sense;
 
 
+
+
+sub silence_carps {
+  local *Algorithm::Networksort::carp = sub {};
+
+  shift->();
+}
+
+
+sub build_selection_network {
+  my ($network, $selection) = @_;
+
+  my $pinned = {};
+  $pinned->{$_} = 1 foreach (@$selection);
+
+  my @reversed_network = reverse @$network;
+  my @reversed_output;
+
+  foreach my $comparator (@reversed_network) {
+    if ($pinned->{$comparator->[0]} || $pinned->{$comparator->[1]}) {
+      $pinned->{$comparator->[0]} = $pinned->{$comparator->[1]} = 1;
+
+      push @reversed_output, $comparator;
+    }
+  }
+
+  return [ reverse @reversed_output ];
+}
+
+
+
 1;
 
 
@@ -18,30 +49,7 @@ Algorithm::Networksort::Chooser - Helper utility for Algorithm::Networksort
 
 =head1 DESCRIPTION
 
-The C<algorithm-networksort-chooser> script helps you find the best sorting network for your particular use-case.
-
-    $ algorithm-networksort-chooser 9  ## input array size 9
-    $ algorithm-networksort-chooser --range=4-10  ## find best networks for sizes 4-10
-
-    $ algorithm-networksort-chooser 9 --opt=comparators  ## optimise for comparators (default)
-    $ algorithm-networksort-chooser 9 --opt=stages  ## optimise for stages
-
-    $ algorithm-networksort-chooser 9 --median  ## best median network
-    $ algorithm-networksort-chooser 9 --selection=4  ## best median network
-    $ algorithm-networksort-chooser 9 --selection=0,1,2  ## top-3 elements selection net
-
-    $ algorithm-networksort-chooser 9 --validate  ## run 0-1 validation test
-    $ algorithm-networksort-chooser 9 --ascii  ## show network as ASCII diagram
-
-
-
-=head1 FUTURE IDEAS
-
-Optimise by average-swaps using combinatoric analysis
-
-Algorithm::Networksort::Validate::XS
-
-
+This module contains library routines used by the L<algorithm-networksort-chooser> command-line script.
 
 =head1 SEE ALSO
 

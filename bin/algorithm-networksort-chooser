@@ -6,6 +6,8 @@ use Algorithm::Networksort;
 use Getopt::Long;
 use Data::Dumper;
 
+use Algorithm::Networksort::Chooser;
+
 
 my @opt_spec = (
   'opt=s',
@@ -28,7 +30,9 @@ my $network_size = shift || die "need network size";
 my @candidates;
 
 foreach my $algo (Algorithm::Networksort::nw_algorithms()) {
-  my @network = silence_carps(sub { Algorithm::Networksort::nw_comparators($network_size, algorithm => $algo) });
+  my @network = Algorithm::Networksort::Chooser::silence_carps(sub {
+    Algorithm::Networksort::nw_comparators($network_size, algorithm => $algo)
+  });
 
   push @candidates, {
     algo => $algo,
@@ -56,7 +60,7 @@ if (defined $opt->{selection}) {
   }
 
   foreach my $candidate (@candidates) {
-    $candidate->{network} = build_selection_network($candidate->{network}, $selection);
+    $candidate->{network} = Algorithm::Networksort::Chooser::build_selection_network($candidate->{network}, $selection);
   }
 }
 
@@ -69,8 +73,6 @@ foreach my $candidate (@candidates) {
   $candidate->{comparators} = (0+@network);
   $candidate->{stages} = (0+@grouped_network);
 }
-
-
 
 
 
@@ -99,33 +101,54 @@ foreach my $result (@sorted_candidates) {
 
 
 
-sub silence_carps {
-  local *Algorithm::Networksort::carp = sub {};
-
-  shift->();
-}
-
-
-sub build_selection_network {
-  my ($network, $selection) = @_;
-
-  my $pinned = {};
-  $pinned->{$_} = 1 foreach (@$selection);
-
-  my @reversed_network = reverse @$network;
-  my @reversed_output;
-
-  foreach my $comparator (@reversed_network) {
-    if ($pinned->{$comparator->[0]} || $pinned->{$comparator->[1]}) {
-      $pinned->{$comparator->[0]} = $pinned->{$comparator->[1]} = 1;
-
-      push @reversed_output, $comparator;
-    }
-  }
-
-  return [ reverse @reversed_output ];
-}
-
-
-
 1;
+
+
+
+
+=encoding utf-8
+
+=head1 NAME
+
+Algorithm::Networksort::Chooser - Helper utility for Algorithm::Networksort
+
+=head1 DESCRIPTION
+
+The C<algorithm-networksort-chooser> script helps you find the best sorting network for your particular use-case.
+
+    $ algorithm-networksort-chooser 9  ## input array size 9
+    $ algorithm-networksort-chooser --range=4-10  ## find best networks for sizes 4-10
+
+    $ algorithm-networksort-chooser 9 --opt=comparators  ## optimise for comparators (default)
+    $ algorithm-networksort-chooser 9 --opt=stages  ## optimise for stages
+
+    $ algorithm-networksort-chooser 9 --median  ## best median network
+    $ algorithm-networksort-chooser 9 --selection=4  ## best median network
+    $ algorithm-networksort-chooser 9 --selection=0,1,2  ## top-3 elements selection net
+
+    $ algorithm-networksort-chooser 9 --validate  ## run 0-1 validation test
+    $ algorithm-networksort-chooser 9 --ascii  ## show network as ASCII diagram
+
+
+
+=head1 FUTURE IDEAS
+
+Optimise by average-swaps using combinatoric analysis
+
+Algorithm::Networksort::Validate::XS
+
+
+
+=head1 SEE ALSO
+
+L<Algorithm-Networksort-Chooser github repo|https://github.com/hoytech/Algorithm-Networksort-Chooser>
+
+=head1 AUTHOR
+
+Doug Hoyte, C<< <doug@hcsw.org> >>
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2013 Doug Hoyte.
+
+This module is licensed under the same terms as perl itself.
