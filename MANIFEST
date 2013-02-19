@@ -1,4 +1,7 @@
+bin/algorithm-networksort-chooser
 Changes
+lib/Algorithm/Networksort/Chooser.pm
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
+t/runs.t
