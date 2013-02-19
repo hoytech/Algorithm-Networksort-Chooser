@@ -8,6 +8,10 @@ my %args = (
     VERSION_FROM => 'lib/Algorithm/Networksort/Chooser.pm',
     PREREQ_PM => {
       'common::sense' => 0,
+      'Getopt::Long' => 0,
+
+      ## Assumes default when there is no best to be batcher, changed to this in 1.30
+      'Algorithm::Networksort' => 1.30,
     },
     LIBS              => [],
     DEFINE            => '',

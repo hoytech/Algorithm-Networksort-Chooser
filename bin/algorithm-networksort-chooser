@@ -4,7 +4,6 @@ use common::sense;
 
 use Algorithm::Networksort;
 use Getopt::Long;
-use Data::Dumper;
 
 use Algorithm::Networksort::Chooser;
 
@@ -184,10 +183,9 @@ sub output_network {
 }
 
 
-1;
 
 
-
+__END__
 
 =encoding utf-8
 
@@ -278,7 +276,7 @@ L<Algorithm::Networksort>'s ASCII output can be seen with C<--show>:
 
 The C<--all> switch shows all networks that were considered.
 
-Sometimes which algorithm or which best special-case network is surprising. For instance, selecting the top-3 elements in a size-9 array is best done by adapting Hibbard algorithm, even though there is a special best (by comparators) network for size 9:
+Sometimes which algorithm or which best special-case network is surprising. For instance, selecting the top-3 elements in a size-9 array is best done by adapting Hibbard's algorithm, even though there is a special best (by comparators) network for size 9:
 
     $ algorithm-networksort-chooser 9 --selection=0,1,2 --all
     Network size: 9
