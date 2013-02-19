@@ -218,7 +218,9 @@ The C<algorithm-networksort-chooser> script helps you find the best sorting netw
 
 =head1 DESCRIPTION
 
-This module uses L<Algorithm::Networksort> to compute sorting networks. This presentation explains what sorting networks are: L<Introduction To Sorting Networks|http://hoytech.github.com/sorting-networks/>
+This module uses L<Algorithm::Networksort> to experiment with sorting networks.
+
+L<Introduction To Sorting Networks|http://hoytech.github.com/sorting-networks/>
 
 By default this script examines the output of all implemented algorithms and the currently best known special-cases, and chooses the one that best meets your specified criteria.
 
@@ -248,7 +250,7 @@ In order to use this output in another program, there is a C<--raw> switch. Its 
 
 L<Algorithm::Networksort>'s ASCII output can be seen with C<--show>:
 
-$ algorithm-networksort-chooser --median 7 --show
+    $ algorithm-networksort-chooser --median 7 --show
     Network size: 7
     Network type: Median network
 
@@ -276,7 +278,7 @@ $ algorithm-networksort-chooser --median 7 --show
 
 The C<--all> switch shows all networks that were considered.
 
-Sometimes which algorithm or "best" special-case network is surprising. For instance, selecting the top-3 elements in a size-9 array is best done by adapting the hibbard algorithm, even though there is a special best (by comparators) network for size 9:
+Sometimes which algorithm or which best special-case network is surprising. For instance, selecting the top-3 elements in a size-9 array is best done by adapting Hibbard algorithm, even though there is a special best (by comparators) network for size 9:
 
     $ algorithm-networksort-chooser 9 --selection=0,1,2 --all
     Network size: 9
@@ -311,7 +313,7 @@ Sometimes which algorithm or "best" special-case network is surprising. For inst
 
 =head1 FUTURE IDEAS
 
-Also optimise by average swaps assuming uniform input using combinatoric analysis
+Also optimise by average swaps
 
 Algorithm::Networksort::Validate::XS
 
@@ -319,7 +321,7 @@ Algorithm::Networksort::Validate::XS
 
 =head1 SEE ALSO
 
-What are sorting networks? L<Introduction To Sorting Networks|http://hoytech.github.com/sorting-networks/>
+L<Introduction To Sorting Networks|http://hoytech.github.com/sorting-networks/>
 
 L<Algorithm-Networksort-Chooser github repo|https://github.com/hoytech/Algorithm-Networksort-Chooser>
 
