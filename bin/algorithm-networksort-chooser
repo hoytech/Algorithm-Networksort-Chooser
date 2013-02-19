@@ -193,7 +193,7 @@ sub output_network {
 
 =head1 NAME
 
-Algorithm::Networksort::Chooser - Helper utility for Algorithm::Networksort
+algorithm-networksort-chooser - Helper utility for Algorithm::Networksort
 
 =head1 SYNOPSIS
 
@@ -207,7 +207,7 @@ The C<algorithm-networksort-chooser> script helps you find the best sorting netw
     $ algorithm-networksort-chooser 9 --opt=stages  ## optimise for stages
 
     $ algorithm-networksort-chooser 9 --median  ## best median network
-    $ algorithm-networksort-chooser 9 --selection=4  ## best median network
+    $ algorithm-networksort-chooser 9 --selection=4  ## also best median network
     $ algorithm-networksort-chooser 9 --selection=0,1,2  ## top-3 elements selection net
 
     $ algorithm-networksort-chooser 9 --validate  ## run 0-1 validation test
@@ -272,6 +272,39 @@ $ algorithm-networksort-chooser --median 7 --show
     o-----v--|--|--------v--v-----|-----o
              |  |                 |      
     o--------v--v-----------------v-----o
+
+
+The C<--all> switch shows all networks that were considered.
+
+Sometimes which algorithm or "best" special-case network is surprising. For instance, selecting the top-3 elements in a size-9 array is best done by adapting the hibbard algorithm, even though there is a special best (by comparators) network for size 9:
+
+    $ algorithm-networksort-chooser 9 --selection=0,1,2 --all
+    Network size: 9
+    Network type: Selection network: 0,1,2
+
+    Optimisation criteria: comparators
+
+    Optimal network:
+      Algorithm "hibbard":
+        Comparators: 18
+        Stages: 7
+
+    Additional candidate networks:
+      Algorithm "batcher":
+        Comparators: 20
+        Stages: 8
+      Algorithm "bosenelson":
+        Comparators: 22
+        Stages: 10
+      Algorithm "best":
+        Comparators: 23
+        Stages: 9
+      Algorithm "bitonic":
+        Comparators: 24
+        Stages: 8
+      Algorithm "bubble":
+        Comparators: 36
+        Stages: 15
 
 
 
