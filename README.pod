@@ -29,13 +29,13 @@ The C<algorithm-networksort-chooser> script helps you find the best sorting netw
 
 This module uses L<Algorithm::Networksort> to experiment with sorting networks.
 
-L<Introduction To Sorting Networks|http://hoytech.github.com/sorting-networks/>
+L<Introduction To Sorting Networks|http://hoytech.github.io/sorting-networks/>
 
 By default this script examines the output of all implemented algorithms and the currently best known special-cases, and chooses the one that best meets your specified criteria.
 
-This module allows you trim the sorting networks into median or selection networks.
+This module allows you to trim sorting networks into median or selection networks.
 
-You can then choose to choose the optimal net based on comparators (total number of operations) or on stages (number of operations considering parallelism).
+You can then choose the optimal net based on comparators (total number of operations) or on stages (number of operations considering parallelism).
 
 Normally the output is something like this:
 
@@ -130,7 +130,7 @@ Algorithm::Networksort::Validate::XS
 
 =head1 SEE ALSO
 
-L<Introduction To Sorting Networks|http://hoytech.github.com/sorting-networks/>
+L<Introduction To Sorting Networks|http://hoytech.github.io/sorting-networks/>
 
 L<Algorithm-Networksort-Chooser github repo|https://github.com/hoytech/Algorithm-Networksort-Chooser>
 
