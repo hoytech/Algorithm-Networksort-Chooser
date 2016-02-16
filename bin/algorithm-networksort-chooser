@@ -54,9 +54,17 @@ if ($opt->{algorithms}) {
 my @candidates;
 
 foreach my $algo (@algos) {
+  die "unknown algorithm: $algo"
+    if !Algorithm::Networksort::nw_algorithm_name($algo);
+
   my @network = Algorithm::Networksort::Chooser::silence_carps(sub {
     Algorithm::Networksort::nw_comparators($network_size, algorithm => $algo)
   });
+
+  if (!@network) {
+    warn "network $algo returned empty comparator list, skipping\n";
+    next;
+  }
 
   push @candidates, {
     algo => $algo,
