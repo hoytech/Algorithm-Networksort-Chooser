@@ -6,6 +6,7 @@ use ExtUtils::MakeMaker;
 my %args = (
     NAME => 'Algorithm::Networksort::Chooser',
     VERSION_FROM => 'lib/Algorithm/Networksort/Chooser.pm',
+    EXE_FILES => [ 'bin/algorithm-networksort-chooser', ],
     PREREQ_PM => {
       'common::sense' => 0,
       'Getopt::Long' => 0,
