@@ -1,6 +1,6 @@
 package Algorithm::Networksort::Chooser;
 
-our $VERSION = '0.100';
+our $VERSION = '0.110';
 
 use common::sense;
 
