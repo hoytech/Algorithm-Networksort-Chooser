@@ -4,6 +4,8 @@ our $VERSION = '0.100';
 
 use common::sense;
 
+use Math::Combinatorics;
+
 
 
 
@@ -36,6 +38,41 @@ sub build_selection_network {
 
 
 
+sub average_swaps_zero_one {
+  my ($n, $network) = @_;
+
+  my $sum = 0;
+  my $count = 0;
+
+  for my $i (0 .. (2**$n - 1)) {
+    my $p = [ split //, sprintf("%0${n}b", $i) ];
+    $count++;
+    Algorithm::Networksort::nw_sort($network, $p);
+    my %stats = Algorithm::Networksort::nw_sort_stats();
+    $sum += $stats{swaps};
+  }
+
+  return $sum / $count;
+}
+
+
+sub average_swaps_permutation {
+  my ($n, $network) = @_;
+
+  my $sum = 0;
+  my $count = 0;
+
+  for my $p (Math::Combinatorics::permute(0 .. ($n-1))) {
+    $count++;
+    Algorithm::Networksort::nw_sort($network, $p);
+    my %stats = Algorithm::Networksort::nw_sort_stats();
+    $sum += $stats{swaps};
+  }
+
+  return $sum / $count;
+}
+
+
 1;
 
 
@@ -61,6 +98,6 @@ Doug Hoyte, C<< <doug@hcsw.org> >>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2013 Doug Hoyte.
+Copyright 2013-2016 Doug Hoyte.
 
 This module is licensed under the same terms as perl itself.

@@ -17,11 +17,13 @@ my @opt_spec = (
   'show',
   'raw',
   'algorithms=s',
+  'swap-mode=s',
   'help|h|?',
 );
 
 my $opt = {
   'opt' => 'comparators',
+  'swap-mode' => 'zero-one',
 };
 
 GetOptions($opt, @opt_spec) || die "GetOptions failed";
@@ -36,6 +38,8 @@ if ($opt->{help}) {
 my $network_size = shift || die "need network size";
 
 
+die "unknown swap-mode: $opt->{'swap-mode'}"
+  if $opt->{'swap-mode'} ne 'zero-one' && $opt->{'swap-mode'} ne 'permutation';
 
 die "validate not implemented yet" if $opt->{validate};
 
@@ -137,6 +141,18 @@ if ($opt->{opt} eq 'comparators') {
   @sorted_candidates = sort {
      ($a->{stages} <=> $b->{stages}) || ($a->{comparators} <=> $b->{comparators})
   } @candidates;
+} elsif ($opt->{opt} eq 'swaps') {
+  foreach my $candidate (@candidates) {
+    if ($opt->{'swap-mode'} eq 'zero-one') {
+      $candidate->{swaps} = Algorithm::Networksort::Chooser::average_swaps_zero_one($network_size, $candidate->{network});
+    } elsif ($opt->{'swap-mode'} eq 'permutation') {
+      $candidate->{swaps} = Algorithm::Networksort::Chooser::average_swaps_permutation($network_size, $candidate->{network});
+    }
+  }
+
+  @sorted_candidates = sort {
+     ($a->{swaps} <=> $b->{swaps}) || ($a->{comparators} <=> $b->{comparators}) || ($a->{stages} <=> $b->{stages})
+  } @candidates;
 } else {
   die "Unknown optimisation criteria: $opt->{opt}";
 }
@@ -190,6 +206,7 @@ sub output_network {
   print "  Algorithm \"$network->{algo}\":\n";
   print "    Comparators: $network->{comparators}\n";
   print "    Stages: $network->{stages}\n";
+  print "    Avg swaps: $network->{swaps}\n" if exists $network->{swaps};
 
   if ($opt->{show}) {
     print "\n";
@@ -348,6 +365,6 @@ Doug Hoyte, C<< <doug@hcsw.org> >>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2013 Doug Hoyte.
+Copyright 2013-2016 Doug Hoyte.
 
 This module is licensed under the same terms as perl itself.
