@@ -19,7 +19,7 @@ my %args = (
     DEFINE            => '',
     LICENSE => 'perl',
     dist => {
-      PREOP => 'perldoc -uT bin/algorithm-networksort-chooser > README.pod; pod2text README.pod > $(DISTVNAME)/README',
+      PREOP => 'pod2text bin/algorithm-networksort-chooser > $(DISTVNAME)/README',
     },
 );
 
