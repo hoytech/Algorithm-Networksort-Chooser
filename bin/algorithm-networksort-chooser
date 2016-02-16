@@ -17,6 +17,7 @@ my @opt_spec = (
   'show',
   'raw',
   'algorithms=s',
+  'help|h|?',
 );
 
 my $opt = {
@@ -24,6 +25,12 @@ my $opt = {
 };
 
 GetOptions($opt, @opt_spec) || die "GetOptions failed";
+
+if ($opt->{help}) {
+  require Pod::Perldoc;
+  @ARGV = ('-F', $0);
+  Pod::Perldoc->run();
+}
 
 
 my $network_size = shift || die "need network size";
